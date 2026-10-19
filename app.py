@@ -91,7 +91,6 @@ hh_discount = 20 if is_happy_hour else 0
 # 2. SIDEBAR BÊN TRÁI (LOGO & THÔNG TIN QUÁN)
 # ---------------------------------------------------------
 with st.sidebar:
-    # Tải và hiển thị hình ảnh quán TRASUA.jpg
     if os.path.exists("TRASUA.jpg"):
         st.image("TRASUA.jpg", caption="BOBA FACTORY Studio", use_container_width=True)
     
@@ -207,7 +206,6 @@ with tab_main:
             format_func=lambda x: f"{x} ({TOPPING_OPTIONS[x]['desc']} - +{TOPPING_OPTIONS[x]['price']:,}đ)"
         )
         
-        # In lời nhắn trên tem ly (Custom Cup Sticker)
         sticker_note = st.text_input("📝 Lời nhắn dán lên tem ly (Custom Sticker):", placeholder="VD: Chúc bé học tốt, Ngọt 50% như tình yêu...")
         
         topping_price = sum(TOPPING_OPTIONS[t]["price"] for t in selected_toppings)
@@ -243,7 +241,10 @@ with tab_main:
         
         with col_cart_table:
             df_cart = pd.DataFrame(st.session_state.cart)
-            st.dataframe(df_cart[["Tên món", "Size", "Topping", "Lời nhắn Sticker", "Số lượng", "Thành tiền"]], use_container_width=True, hide_index=True)
+            
+            # Xử lý hiển thị bảng an toàn phòng trường hợp giỏ hàng còn dữ liệu cũ
+            cols_to_show = [c for c in ["Tên món", "Size", "Topping", "Lời nhắn Sticker", "Số lượng", "Thành tiền"] if c in df_cart.columns]
+            st.dataframe(df_cart[cols_to_show], use_container_width=True, hide_index=True)
             
             if st.button("🗑️ Xóa tất cả trong giỏ"):
                 st.session_state.cart = []
@@ -255,7 +256,6 @@ with tab_main:
             customer_name = st.text_input("Tên khách hàng:", placeholder="Nhập tên bạn...")
             customer_phone = st.text_input("Số điện thoại (Tích điểm):", placeholder="0702xxxxxx...")
             
-            # Thẻ tích điểm Digital Stamp Card
             if customer_phone:
                 past_cups = st.session_state.loyalty_db.get(customer_phone, 0)
                 st.caption(f"🌟 **Digital Stamp Card:** Đã tích **{past_cups}** ly.")
@@ -375,7 +375,8 @@ with tab_admin:
         st.markdown("### 🖨️ KDS - Danh sách đơn hàng & In tem sticker ly")
         if st.session_state.cart:
             df_kds = pd.DataFrame(st.session_state.cart)
-            st.dataframe(df_kds[["Tên món", "Size", "Topping", "Lời nhắn Sticker", "Số lượng"]], use_container_width=True)
+            cols_kds = [c for c in ["Tên món", "Size", "Topping", "Lời nhắn Sticker", "Số lượng"] if c in df_kds.columns]
+            st.dataframe(df_kds[cols_kds], use_container_width=True)
         else:
             st.info("Hiện tại chưa có đơn hàng mới nào cần pha chế.")
     elif pin_code != "":
