@@ -59,34 +59,38 @@ st.markdown("""
 # 2. DỮ LIỆU SẢN PHẨM & MENU PHÂN LOẠI
 # ---------------------------------------------------------
 MENU_DATA = {
-    "Trà Sữa": {
-        "Trà Sữa Truyền Thống": {"price": 30000, "img": "🧋", "desc": "Vị trà đậm đà kết hợp béo ngậy"},
-        "Trà Sữa Trân Châu Đường Đen": {"price": 35000, "img": "🧋", "desc": "Trân châu dẻo thơm đường đen"},
-        "Trà Sữa Thái Xanh": {"price": 32000, "img": "🍵", "desc": "Thơm mát chuẩn vị Thái"},
-        "Trà Sữa Ô Long": {"price": 35000, "img": "🧋", "desc": "Hương ô long thanh nhẹ, đậm hậu vị"},
-        "Trà Sữa Matcha": {"price": 38000, "img": "🍵", "desc": "Matcha Nhật Bản nguyên chất"}
+    "Milk Tea Factory": {
+        "Original Batch": {"price": 25000, "img": "🧋", "desc": "Trà sữa truyền thống - Vị trà đậm đà kết hợp béo ngậy"},
+        "Brown Sugar Batch": {"price": 30000, "img": "🧋", "desc": "Trà sữa đường đen - Trân châu dẻo thơm đường đen"},
+        "Golden Oolong": {"price": 29000, "img": "🫖", "desc": "Trà sữa ô long - Hương ô long thơm dịu, hậu vị thanh"}, 
+        "Jasmine Silk": {"price": 27000, "img": "🧋", "desc": "Trà sữa lài - Hương hoa lài nhẹ nhàng, vị sữa béo thơm"},
+        "Purple Formula": {"price": 30000, "img": "🍵", "desc": "Trà sữa khoai môn - Vị khoai môn bùi béo cùng sắc tím bắt mắt"},
+        "Choco Factory": {"price": 30000, "img": "🍫", "desc": "Trà sữa chocolate - Chocolate thơm đậm hòa cùng vị trà sữa ngọt ngào"},
+        "Matcha Velvet": {"price": 32000, "img": "🍵", "desc": "Trà sữa matcha - Matcha Nhật Bản nguyên chất, cân bằng bởi lớp sữa béo mịn"}
     },
-    "Trà Trái Cây": {
-        "Trà Đào Cam Sả": {"price": 35000, "img": "🍑", "desc": "Giải nhiệt ngày hè với miếng đào giòn"},
-        "Trà Dâu Tằm": {"price": 32000, "img": "🍓", "desc": "Chua ngọt tự nhiên từ dâu tằm tươi"},
-        "Trà Dâu Tây": {"price": 35000, "img": "🍓", "desc": "Hương dâu tây tươi mát bộc phá"}
+    "Fresh Tea Lab": {
+        "Strawberry Breeze": {"price": 29000, "img": "🍓", "desc": "Trà dâu — Hương dâu ngọt dịu, điểm chút chua nhẹ dễ uống"},
+        "Peachy Mood": {"price": 27000, "img": "🍑", "desc": "Trà đào — Trà thơm dịu kết hợp vị đào ngọt thanh, tươi mát"},
+        "Passion Rush": {"price": 25000, "img": "🍋", "desc": "Trà chanh dây — Chua ngọt sảng khoái, thơm nồng vị chanh dây."},
+        "Citrus Spark": {"price": 27000, "img": "🍊", "desc": "Trà cam chanh — Vị cam chanh tươi sáng, chua nhẹ và thơm mát"}
+        "Jasmine Peach": {"price": 27000, "img": "🍑", "desc": "Trà lài đào — Hương lài thanh tao kết hợp vị đào ngọt nhẹ"}
     }
 }
 
 BEST_SELLERS = [
-    {"name": "Trà Sữa Trân Châu Đường Đen", "price": 35000, "img": "🧋", "tag": "🔥 HOT Sales"},
-    {"name": "Trà Đào Cam Sả", "price": 35000, "img": "🍑", "tag": "⭐ Top Rated"},
-    {"name": "Trà Sữa Ô Long", "price": 35000, "img": "🍵", "tag": "👍 Must Try"},
-    {"name": "Trà Sữa Matcha", "price": 38000, "img": "🍵", "tag": "✨ Favorite"}
+    {"name": "Brown Sugar Batch", "price": 30000, "img": "🧋", "tag": "🔥 HOT Sales"},
+    {"name": "Peachy Mood", "price": 27000, "img": "🍑", "tag": "⭐ Top Rated"},
+    {"name": "Golden Oolong", "price": 29000, "img": "🍵", "tag": "👍 Must Try"},
+    {"name": "Matcha Velvet", "price": 32000, "img": "🍵", "tag": "✨ Favorite"}
 ]
 
-SIZE_OPTIONS = {"S (Vừa)": 0, "M (Lớn)": 5000, "L (Đặc biệt)": 10000}
+SIZE_OPTIONS = {"MINI BATCH (Vừa)": 0, "DAILY BREW (Lớn)": 5000, "MEGA BATCH (Đặc biệt)": 10000}
 TOPPING_OPTIONS = {
-    "Trân châu đen": 5000,
-    "Trân châu trắng": 7000,
-    "Thạch trái cây": 5000,
-    "Pudding trứng": 8000,
-    "Kem Cheese": 10000
+    "Factory Pearls": {"price": 5000, "desc": "Trân châu đen"},
+    "Golden Boba": {"price": 7000, "desc": "Trân châu hoàng kim"},
+    "Egg Pudding": {"price": 8000, "desc": "Pudding trứng"},
+    "Cloud Foam": {"price": 10000, "desc": "Kem cheese foam"},
+    "Taro Bites": {"price": 8000, "desc": "Khoai môn viên"},
 }
 SUGAR_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0%"]
 ICE_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0%"]
