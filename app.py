@@ -16,12 +16,10 @@ st.set_page_config(
 # Custom CSS tạo giao diện bo tròn, phong cách Studio cao cấp
 st.markdown("""
 <style>
-    /* Nền trang & phông chữ */
     .stApp {
         background-color: #FFFDF9;
     }
     
-    /* Compact Banner bo tròn viền mềm */
     .compact-banner {
         background: #FDF6EE;
         border: 1px solid #F5E8D9;
@@ -43,27 +41,14 @@ st.markdown("""
         font-style: italic;
     }
 
-    /* Studio Section Card (Giao diện giống hình tham khảo) */
-    .section-header-card {
-        background: #FDF6EE;
-        border-radius: 16px;
-        padding: 16px 20px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    
     .bestseller-card {
         background-color: #FFFFFF;
         border: 1px solid #F3E5D8;
         border-radius: 18px;
         padding: 18px 15px;
         text-align: center;
-        transition: transform 0.2s ease;
     }
     
-    /* Custom Footer */
     .custom-footer {
         background-color: #FDF6EE;
         border: 1px solid #F5E8D9;
@@ -308,11 +293,20 @@ with tab_main:
             st.markdown("#### 🛵 Thông tin giao nhận")
             customer_name = st.text_input("Tên khách hàng:", placeholder="Nhập tên bạn...")
             customer_phone = st.text_input("Số điện thoại:", placeholder="0702xxxxxx...")
-            order_type = st.radio("Hình thức:", ["Tại quán", "Mang đi", "Giao hàng (Delivery)"], horizontal=True)
-            delivery_addr = st.text_input("Địa chỉ giao hàng:") if order_type == "Giao hàng (Delivery)" else ""
+            
+            # 3 Hình thức nhận hàng đúng yêu cầu
+            order_type = st.radio(
+                "Hình thức nhận hàng:", 
+                ["Ngồi tại quán", "Đến lấy (Takeaway)", "Ship đi (Delivery)"], 
+                horizontal=True
+            )
+            
+            delivery_addr = ""
+            if order_type == "Ship đi (Delivery)":
+                delivery_addr = st.text_input("Địa chỉ giao hàng:", placeholder="Nhập số nhà, tên đường...")
             
             raw_total = df_cart["Thành tiền"].sum()
-            ship_fee = 15000 if order_type == "Giao hàng (Delivery)" and raw_total < 100000 else 0
+            ship_fee = 15000 if order_type == "Ship đi (Delivery)" and raw_total < 100000 else 0
             
             discount_amount = int(raw_total * (st.session_state.game_discount / 100))
             final_total = raw_total - discount_amount + ship_fee
@@ -324,18 +318,22 @@ with tab_main:
                 st.markdown(f"🛵 **Phí giao hàng:** {ship_fee:,} VNĐ")
             st.markdown(f"### TỔNG THANH TOÁN: :red[{final_total:,} VNĐ]")
             
-            payment_method = st.selectbox("Phương thức thanh toán:", ["Chuyển khoản VietQR", "Tiền mặt"])
-            
-            if st.button("💳 XÁC NHẬN ĐẶT HÀNG", type="primary", use_container_width=True):
+            if st.button("💳 TẾN HÀNH THANH TOÁN", type="primary", use_container_width=True):
                 st.session_state.invoice_paid = True
                 st.balloons()
                 
+            # Xử lý hiển thị mã QR theo 3 hình thức
             if st.session_state.invoice_paid:
-                st.success("🎉 Đơn hàng của bạn đã được gửi thành công!")
-                if payment_method == "Chuyển khoản VietQR":
-                    st.markdown("#### 📲 Quét mã VietQR Chuyển Khoản")
+                st.success(f"🎉 Đã ghi nhận đơn hàng cho **{customer_name if customer_name else 'Khách hàng'}** ({order_type})!")
+                
+                # Đến lấy hoặc Ship đi -> Hiển thị mã QR Chuyển khoản
+                if order_type in ["Đến lấy (Takeaway)", "Ship đi (Delivery)"]:
+                    st.markdown("#### 📲 Quét mã VietQR để thanh toán chuyển khoản")
                     qr_url = f"https://img.vietqr.io/image/MB-0702884202-compact2.png?amount={final_total}&addInfo=BOBA%20{customer_phone}&accountName=BOBA%20FACTORY"
-                    st.image(qr_url, caption="Mở App Ngân hàng quét mã chuyển khoản", width=280)
+                    st.image(qr_url, caption="Quét mã bằng App Ngân hàng / Momo để hoàn tất", width=280)
+                else:
+                    # Ngồi tại quán
+                    st.info("💵 Bạn chọn **Ngồi tại quán**. Vui lòng thanh toán tại quầy thu ngân hoặc nhân viên phục vụ tại bàn!")
 
     # --- SECTION 5: FOOTER ---
     st.markdown("""
@@ -372,4 +370,14 @@ with tab_admin:
         st.markdown("---")
         
         col_m1, col_m2, col_m3 = st.columns(3)
-        col_m1
+        col_m1.metric("Tổng đơn hôm nay", "18 Đơn", "+4 đơn")
+        col_m2.metric("Doanh thu trong ngày", "1.890.000 VNĐ", "+22%")
+        col_m3.metric("Món bán chạy nhất", "Brown Sugar Batch")
+        
+        st.markdown("### 📋 Danh sách đơn hàng cần pha chế (KDS)")
+        if st.session_state.cart:
+            st.dataframe(pd.DataFrame(st.session_state.cart), use_container_width=True)
+        else:
+            st.info("Hiện tại chưa có đơn hàng mới nào cần pha chế.")
+    elif pin_code != "":
+        st.error("❌ Mã PIN không chính xác! Vui lòng thử lại.")
