@@ -16,7 +16,6 @@ st.set_page_config(
 # Custom CSS thu gọn Banner & làm đẹp UI
 st.markdown("""
 <style>
-    /* Thu gọn Banner 25% chiều cao */
     .compact-banner {
         background: linear-gradient(135deg, #FFD1DC 0%, #FFEBEF 100%);
         padding: 18px 25px;
@@ -37,7 +36,6 @@ st.markdown("""
         color: #8D6E63;
         font-style: italic;
     }
-    /* Thẻ Best Seller */
     .bestseller-card {
         background-color: #FFFFFF;
         border: 1px solid #F4E4D4;
@@ -46,7 +44,6 @@ st.markdown("""
         text-align: center;
         box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
-    /* Footer */
     .custom-footer {
         background-color: #F5E6D3;
         padding: 25px;
@@ -110,7 +107,6 @@ if "won_gift" not in st.session_state:
 # 3. SIDEBAR BÊN TRÁI (LOGO NHỎ & THÔNG TIN CỬA HÀNG)
 # ---------------------------------------------------------
 with st.sidebar:
-    # Đưa ảnh cửa hàng vào 1 góc nhỏ ở sidebar
     if os.path.exists("TRASUA.jpg"):
         st.image("TRASUA.jpg", caption="BOBA FACTORY Studio", use_container_width=True)
     
@@ -130,7 +126,7 @@ with st.sidebar:
     st.write("🔢 **Số tài khoản:** **0702884202**")
 
 # ---------------------------------------------------------
-# 4. COMPACT BANNER (ĐÃ THU GỌN 25% CHIỀU CAO)
+# 4. COMPACT BANNER
 # ---------------------------------------------------------
 st.markdown("""
 <div class="compact-banner">
@@ -168,11 +164,11 @@ with tab_main:
             """, unsafe_allow_html=True)
             if st.button(f"👉 Chọn món này", key=f"bs_{idx}", use_container_width=True):
                 st.session_state.selected_item_name = item['name']
-                st.toast(f"Đã chọn **{item['name']}**! Hãy chọn tùy chọn bên dưới.", icon="🎯")
+                st.toast(f"Đã chọn **{item['name']}**!", icon="🎯")
 
     st.markdown("---")
 
-    # --- BỐ CỤC 2: EXPLORE THE MENU & 3: CUSTOMIZE YOUR CUP ---
+    # --- BỐ CỤC 2 & 3: MENU VÀ TÙY CHỈNH LY TRÀ SỮA ---
     col_menu, col_custom = st.columns([1, 1.1])
     
     with col_menu:
@@ -193,7 +189,6 @@ with tab_main:
     with col_custom:
         st.markdown("### 3. 🎨 Customize Your Cup (Tùy Chỉnh Ly Trà Sữa)")
         
-        # Tìm giá của món đang chọn
         current_item = st.session_state.selected_item_name
         current_base_price = 30000
         for cat in MENU_DATA.values():
@@ -236,7 +231,7 @@ with tab_main:
 
     st.markdown("---")
 
-    # --- BỐ CỤC 4: YOUR ORDER (GIỎ HÀNG & THANH TOÁN) ---
+    # --- BỐ CỤC 4: YOUR ORDER ---
     st.markdown("### 4. 🛒 Your Order (Giỏ Hàng & Xác Nhận Đơn)")
     
     if not st.session_state.cart:
@@ -283,14 +278,4 @@ with tab_main:
                 st.success("🎉 Đơn hàng của bạn đã được gửi thành công!")
                 if payment_method == "Chuyển khoản VietQR":
                     st.markdown("#### 📲 Quét mã VietQR Chuyển Khoản")
-                    # Tạo mã VietQR động
-                    qr_url = f"https://img.vietqr.io/image/MB-0702884202-compact2.png?amount={final_total}&addInfo=BOBA%20{customer_phone}&accountName=BOBA%20FACTORY"
-                    st.image(qr_url, caption="Mở App Ngân hàng quét mã chuyển khoản", width=280)
-
-    # --- BỐ CỤC 5: FOOTER ---
-    st.markdown("""
-    <div class="custom-footer">
-        <h3>🧋 BOBA FACTORY STUDIO</h3>
-        <p>📍 <b>Địa chỉ:</b> 306 Võ Văn Hát, P. Long Trường, TP. Thủ Đức, TP.HCM</p>
-        <p>📞 <b>Hotline Đặt Hàng:</b> 0702.884.202 | ⏰ <b>Mở cửa:</b> 09:00 - 22:00 Hàng ngày</p>
-        <p style="font-size: 13px; color: #8
+                    qr_url = f"
