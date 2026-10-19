@@ -114,7 +114,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 💳 Thông tin chuyển khoản")
-    st.write("🏦 **Ngân hàng:** MB Bank")
+    st.write("🏦 **Ngân hàng:** MB Bank / Momo")
     st.write("👤 **Chủ tài khoản:** BOBA FACTORY")
     st.write("🔢 **Số tài khoản:** **0702884202**")
 
@@ -241,8 +241,6 @@ with tab_main:
         
         with col_cart_table:
             df_cart = pd.DataFrame(st.session_state.cart)
-            
-            # Xử lý hiển thị bảng an toàn phòng trường hợp giỏ hàng còn dữ liệu cũ
             cols_to_show = [c for c in ["Tên món", "Size", "Topping", "Lời nhắn Sticker", "Số lượng", "Thành tiền"] if c in df_cart.columns]
             st.dataframe(df_cart[cols_to_show], use_container_width=True, hide_index=True)
             
@@ -263,6 +261,9 @@ with tab_main:
 
             order_type = st.radio("Hình thức nhận hàng:", ["Ngồi tại quán", "Đến lấy (Takeaway)", "Ship đi (Delivery)"], horizontal=True)
             
+            # Phương thức thanh toán (Thêm lựa chọn Chuyển khoản VietQR hoặc Tiền mặt)
+            pay_method = st.radio("Phương thức thanh toán:", ["Chuyển khoản VietQR", "Tiền mặt"], horizontal=True)
+            
             delivery_addr = ""
             if order_type == "Ship đi (Delivery)":
                 delivery_addr = st.text_input("Địa chỉ giao hàng:", placeholder="Nhập số nhà, tên đường...")
@@ -282,13 +283,13 @@ with tab_main:
                 st.markdown(f"🛵 **Phí giao hàng:** {ship_fee:,} VNĐ")
             st.markdown(f"### TỔNG THANH TOÁN: :red[{final_total:,} VNĐ]")
             
-            if st.button("💳 XÁC NHẬN THANH TOÁN", type="primary", use_container_width=True):
+            if st.button("💳 XÁC NHẬN ĐẶT HÀNG", type="primary", use_container_width=True):
                 st.session_state.invoice_paid = True
                 if customer_phone:
                     st.session_state.loyalty_db[customer_phone] = st.session_state.loyalty_db.get(customer_phone, 0) + total_cups_now
                 st.balloons()
                 
-        # Order Tracker & VietQR
+        # Order Tracker & VietQR (Cho phép hiện VietQR cho cả trường hợp Ngồi tại quán nếu chọn CK)
         if st.session_state.invoice_paid:
             with st.status("🔄 Đang xử lý đơn hàng theo thời gian thực...", expanded=True) as status:
                 st.write("✅ Đã nhận thông tin đơn hàng")
@@ -299,12 +300,12 @@ with tab_main:
                 time.sleep(0.8)
                 status.update(label="🎉 ĐƠN HÀNG ĐÃ HOÀN TẤT & SẴN SÀNG!", state="complete", expanded=False)
 
-            if order_type in ["Đến lấy (Takeaway)", "Ship đi (Delivery)"]:
+            if pay_method == "Chuyển khoản VietQR":
                 st.markdown("#### 📲 Quét mã VietQR Chuyển Khoản")
                 qr_url = f"https://img.vietqr.io/image/MB-0702884202-compact2.png?amount={final_total}&addInfo=BOBA%20{customer_phone}&accountName=BOBA%20FACTORY"
-                st.image(qr_url, caption="Mở App Ngân hàng / Momo quét mã để hoàn tất", width=280)
+                st.image(qr_url, caption="Quét mã bằng App Ngân hàng / Momo để hoàn tất thanh toán", width=280)
             else:
-                st.info("💵 Bạn chọn **Ngồi tại quán**. Vui lòng thanh toán trực tiếp tại quầy thu ngân hoặc tại bàn!")
+                st.info("💵 Bạn đã chọn **Tiền mặt**. Vui lòng thanh toán trực tiếp tại quầy thu ngân hoặc cho nhân viên phục vụ!")
 
     # --- FOOTER ---
     st.markdown("""
