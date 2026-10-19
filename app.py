@@ -114,7 +114,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 💳 Thông tin chuyển khoản")
-    st.write("🏦 **Ngân hàng:** MB Bank / Momo")
+    st.write("🏦 **Ngân hàng:** Vietcombank")
     st.write("👤 **Chủ tài khoản:** BOBA FACTORY")
     st.write("🔢 **Số tài khoản:** **0702884202**")
 
