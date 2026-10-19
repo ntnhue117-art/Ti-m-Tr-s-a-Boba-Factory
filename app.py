@@ -72,8 +72,8 @@ MENU_DATA = {
         "Strawberry Breeze": {"price": 29000, "img": "🍓", "desc": "Trà dâu — Hương dâu ngọt dịu, điểm chút chua nhẹ dễ uống"},
         "Peachy Mood": {"price": 27000, "img": "🍑", "desc": "Trà đào — Trà thơm dịu kết hợp vị đào ngọt thanh, tươi mát"},
         "Passion Rush": {"price": 25000, "img": "🍋", "desc": "Trà chanh dây — Chua ngọt sảng khoái, thơm nồng vị chanh dây."},
-        "Citrus Spark": {"price": 27000, "img": "🍊", "desc": "Trà cam chanh — Vị cam chanh tươi sáng, chua nhẹ và thơm mát"}
-        "Jasmine Peach": {"price": 27000, "img": "🍑", "desc": "Trà lài đào — Hương lài thanh tao kết hợp vị đào ngọt nhẹ"}
+        "Citrus Spark": {"price": 27000, "img": "🍊", "desc": "Trà cam chanh — Vị cam chanh tươi sáng, chua nhẹ và thơm mát"},
+        "Jasmine Peach": {"price": 27000, "img": "🍑", "desc": "Trà lài đào — Hương lài thanh tao kết hợp vị đào ngọt nhẹ"},
     }
 }
 
@@ -81,7 +81,7 @@ BEST_SELLERS = [
     {"name": "Brown Sugar Batch", "price": 30000, "img": "🧋", "tag": "🔥 HOT Sales"},
     {"name": "Peachy Mood", "price": 27000, "img": "🍑", "tag": "⭐ Top Rated"},
     {"name": "Golden Oolong", "price": 29000, "img": "🍵", "tag": "👍 Must Try"},
-    {"name": "Matcha Velvet", "price": 32000, "img": "🍵", "tag": "✨ Favorite"}
+    {"name": "Matcha Velvet", "price": 32000, "img": "🍵", "tag": "✨ Favorite"},
 ]
 
 SIZE_OPTIONS = {"MINI BATCH (Vừa)": 0, "DAILY BREW (Lớn)": 5000, "MEGA BATCH (Đặc biệt)": 10000}
