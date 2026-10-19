@@ -5,7 +5,7 @@ import random
 import os
 
 # ---------------------------------------------------------
-# 1. CẤU HÌNH TRANG & CUSTOM CSS
+# 1. CẤU HÌNH TRANG & CUSTOM CSS (VIBE MINIMALIST STUDIO)
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="BOBA FACTORY - Premium Tea Studio",
@@ -13,44 +13,65 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS thu gọn Banner & làm đẹp UI
+# Custom CSS tạo giao diện bo tròn, phong cách Studio cao cấp
 st.markdown("""
 <style>
+    /* Nền trang & phông chữ */
+    .stApp {
+        background-color: #FFFDF9;
+    }
+    
+    /* Compact Banner bo tròn viền mềm */
     .compact-banner {
-        background: linear-gradient(135deg, #FFD1DC 0%, #FFEBEF 100%);
-        padding: 18px 25px;
-        border-radius: 18px;
+        background: #FDF6EE;
+        border: 1px solid #F5E8D9;
+        padding: 22px 30px;
+        border-radius: 20px;
         text-align: center;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        margin-bottom: 25px;
     }
     .banner-title {
-        font-size: 32px;
+        font-size: 30px;
         font-weight: 800;
-        color: #5D4037;
-        margin-bottom: 2px;
+        color: #4A3525;
         letter-spacing: 2px;
+        margin-bottom: 4px;
     }
     .banner-sub {
-        font-size: 14px;
-        color: #8D6E63;
+        font-size: 13px;
+        color: #8C7361;
         font-style: italic;
     }
+
+    /* Studio Section Card (Giao diện giống hình tham khảo) */
+    .section-header-card {
+        background: #FDF6EE;
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
     .bestseller-card {
         background-color: #FFFFFF;
-        border: 1px solid #F4E4D4;
-        border-radius: 15px;
-        padding: 15px;
+        border: 1px solid #F3E5D8;
+        border-radius: 18px;
+        padding: 18px 15px;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        transition: transform 0.2s ease;
     }
+    
+    /* Custom Footer */
     .custom-footer {
-        background-color: #F5E6D3;
-        padding: 25px;
-        border-radius: 15px;
+        background-color: #FDF6EE;
+        border: 1px solid #F5E8D9;
+        padding: 30px;
+        border-radius: 20px;
         margin-top: 40px;
         text-align: center;
-        color: #5D4037;
+        color: #4A3525;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -99,7 +120,7 @@ ICE_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0%"]
 if "cart" not in st.session_state:
     st.session_state.cart = []
 if "selected_item_name" not in st.session_state:
-    st.session_state.selected_item_name = "Trà Sữa Truyền Thống"
+    st.session_state.selected_item_name = "Original Batch"
 if "invoice_paid" not in st.session_state:
     st.session_state.invoice_paid = False
 if "game_discount" not in st.session_state:
@@ -108,7 +129,7 @@ if "won_gift" not in st.session_state:
     st.session_state.won_gift = ""
 
 # ---------------------------------------------------------
-# 3. SIDEBAR BÊN TRÁI (LOGO NHỎ & THÔNG TIN CỬA HÀNG)
+# 3. SIDEBAR BÊN TRÁI
 # ---------------------------------------------------------
 with st.sidebar:
     if os.path.exists("TRASUA.jpg"):
@@ -130,11 +151,11 @@ with st.sidebar:
     st.write("🔢 **Số tài khoản:** **0702884202**")
 
 # ---------------------------------------------------------
-# 4. COMPACT BANNER
+# 4. COMPACT BANNER (VIBE STUDIO BO TRÒN)
 # ---------------------------------------------------------
 st.markdown("""
 <div class="compact-banner">
-    <div style="font-size: 12px; letter-spacing: 2px; font-weight: bold; color: #E07A5F;">WELCOME TO OUR TEA STUDIO</div>
+    <div style="font-size: 11px; letter-spacing: 2px; font-weight: bold; color: #C87A57;">WELCOME TO OUR TEA STUDIO</div>
     <div class="banner-title">BOBA FACTORY</div>
     <div class="banner-sub">"Trải nghiệm hương vị trà sữa thủ công đậm đà & ngọt ngào"</div>
 </div>
@@ -151,8 +172,17 @@ tab_main, tab_lucky, tab_admin = st.tabs([
 
 # ==================== TAB 1: TRẢI NGHIỆM ĐẶT HÀNG ====================
 with tab_main:
-    # --- BỐ CỤC 1: BEST SELLERS ---
-    st.markdown("### 1. 🔥 Best Sellers (Món Bán Chạy)")
+    # --- SECTION 1: FACTORY FAVORITES ---
+    st.markdown("""
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+        <span style="font-size: 24px; background: #F7EBE1; padding: 8px 12px; border-radius: 12px;">⭐</span>
+        <div>
+            <h3 style="margin: 0; color: #4A3525; font-size: 20px;">Factory Favorites</h3>
+            <p style="margin: 0; color: #8C7361; font-size: 13px;">Những công thức được yêu thích nhất</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     col_bs1, col_bs2, col_bs3, col_bs4 = st.columns(4)
     cols_bs = [col_bs1, col_bs2, col_bs3, col_bs4]
     
@@ -160,23 +190,32 @@ with tab_main:
         with cols_bs[idx]:
             st.markdown(f"""
             <div class="bestseller-card">
-                <span style="background-color:#E07A5F; color:white; padding:2px 8px; border-radius:10px; font-size:11px;">{item['tag']}</span>
-                <h3 style="margin:8px 0; font-size:45px;">{item['img']}</h3>
-                <h4 style="font-size:15px; margin:5px 0;">{item['name']}</h4>
-                <p style="color:#E07A5F; font-weight:bold; margin-bottom:8px;">{item['price']:,} VNĐ</p>
+                <span style="background-color:#E07A5F; color:white; padding:3px 10px; border-radius:12px; font-size:10px; font-weight:bold;">{item['tag']}</span>
+                <h2 style="margin:10px 0; font-size:40px;">{item['img']}</h2>
+                <h4 style="font-size:14px; margin:5px 0; color:#4A3525;">{item['name']}</h4>
+                <p style="color:#C87A57; font-weight:bold; margin-bottom:10px;">{item['price']:,} VNĐ</p>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(f"👉 Chọn món này", key=f"bs_{idx}", use_container_width=True):
+            if st.button("👉 Chọn món này", key=f"bs_{idx}", use_container_width=True):
                 st.session_state.selected_item_name = item['name']
                 st.toast(f"Đã chọn **{item['name']}**!", icon="🎯")
 
     st.markdown("---")
 
-    # --- BỐ CỤC 2 & 3: MENU VÀ TÙY CHỈNH LY TRÀ SỮA ---
+    # --- SECTION 2 & 3: THE BOBA LINEUP & BUILD YOUR OWN BOBA ---
     col_menu, col_custom = st.columns([1, 1.1])
     
     with col_menu:
-        st.markdown("### 2. 🧋 Explore the Menu (Khám Phá Menu)")
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 24px; background: #F7EBE1; padding: 8px 12px; border-radius: 12px;">🧋</span>
+            <div>
+                <h3 style="margin: 0; color: #4A3525; font-size: 20px;">The Boba Lineup</h3>
+                <p style="margin: 0; color: #8C7361; font-size: 13px;">Khám phá menu đồ uống của chúng mình</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
         category = st.radio("Chọn nhóm đồ uống:", list(MENU_DATA.keys()), horizontal=True)
         
         selected_category_items = MENU_DATA[category]
@@ -191,10 +230,18 @@ with tab_main:
             st.divider()
 
     with col_custom:
-        st.markdown("### 3. 🎨 Customize Your Cup (Tùy Chỉnh Ly Trà Sữa)")
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 24px; background: #F7EBE1; padding: 8px 12px; border-radius: 12px;">🧪</span>
+            <div>
+                <h3 style="margin: 0; color: #4A3525; font-size: 20px;">Build Your Own Boba</h3>
+                <p style="margin: 0; color: #8C7361; font-size: 13px;">Chọn vị yêu thích, tạo ly của riêng bạn</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
         current_item = st.session_state.selected_item_name
-        current_base_price = 30000
+        current_base_price = 25000
         for cat in MENU_DATA.values():
             if current_item in cat:
                 current_base_price = cat[current_item]["price"]
@@ -212,9 +259,14 @@ with tab_main:
         with c_ic:
             selected_ice = st.selectbox("Mức đá:", ICE_LEVELS)
             
-        selected_toppings = st.multiselect("Thêm Topping:", list(TOPPING_OPTIONS.keys()))
+        selected_toppings = st.multiselect(
+            "Thêm Topping:", 
+            options=list(TOPPING_OPTIONS.keys()),
+            format_func=lambda x: f"{x} ({TOPPING_OPTIONS[x]['desc']} - +{TOPPING_OPTIONS[x]['price']:,}đ)"
+        )
         
-        unit_price = current_base_price + SIZE_OPTIONS[selected_size] + sum(TOPPING_OPTIONS[t] for t in selected_toppings)
+        topping_price = sum(TOPPING_OPTIONS[t]["price"] for t in selected_toppings)
+        unit_price = current_base_price + SIZE_OPTIONS[selected_size] + topping_price
         item_total = unit_price * quantity
         
         st.info(f"💰 Đơn giá 1 ly tùy chỉnh: **{unit_price:,} VNĐ**")
@@ -235,8 +287,8 @@ with tab_main:
 
     st.markdown("---")
 
-    # --- BỐ CỤC 4: YOUR ORDER ---
-    st.markdown("### 4. 🛒 Your Order (Giỏ Hàng & Xác Nhận Đơn)")
+    # --- SECTION 4: YOUR ORDER ---
+    st.markdown("### 🛒 Your Order (Giỏ Hàng & Xác Nhận Đơn)")
     
     if not st.session_state.cart:
         st.warning("Giỏ hàng hiện tại đang trống. Vui lòng chọn món ở phần menu phía trên.")
@@ -285,7 +337,7 @@ with tab_main:
                     qr_url = f"https://img.vietqr.io/image/MB-0702884202-compact2.png?amount={final_total}&addInfo=BOBA%20{customer_phone}&accountName=BOBA%20FACTORY"
                     st.image(qr_url, caption="Mở App Ngân hàng quét mã chuyển khoản", width=280)
 
-    # --- BỐ CỤC 5: FOOTER ---
+    # --- SECTION 5: FOOTER ---
     st.markdown("""
     <div class="custom-footer">
         <h3>🧋 BOBA FACTORY STUDIO</h3>
@@ -320,14 +372,4 @@ with tab_admin:
         st.markdown("---")
         
         col_m1, col_m2, col_m3 = st.columns(3)
-        col_m1.metric("Tổng đơn hôm nay", "18 Đơn", "+4 đơn")
-        col_m2.metric("Doanh thu trong ngày", "1.890.000 VNĐ", "+22%")
-        col_m3.metric("Món bán chạy nhất", "Trà Sữa Trân Châu Đường Đen")
-        
-        st.markdown("### 📋 Danh sách đơn hàng cần pha chế (KDS)")
-        if st.session_state.cart:
-            st.dataframe(pd.DataFrame(st.session_state.cart), use_container_width=True)
-        else:
-            st.info("Hiện tại chưa có đơn hàng mới nào cần pha chế.")
-    elif pin_code != "":
-        st.error("❌ Mã PIN không chính xác! Vui lòng thử lại.")
+        col_m1
