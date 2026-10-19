@@ -52,11 +52,13 @@ MENU_TEA = {
     "Trà Sữa Ô Long": 35000,
     "Trà Sữa Matcha": 38000,
     "Trà Sữa Dâu Tây": 35000,
-    "Trà Đào Cam Sả": 35000,
-    "Trà Dâu Tằm": 32000,
+    "Trà Sữa Đào": 35000,
+    "Trà Sữa Dâu Tằm": 32000,
+    "Trà sữa Ô Long Nướng": 40000,
+    "Trà sữa Cheese Form": 40000,
 }
 
-SIZE_OPTIONS = {"S (Vừa)": 0, "M (Lớn)": 5000, "L (Đặc biệt)": 10000}
+SIZE_OPTIONS = {"MINI BATCH (Vừa)": 0, "DAILY BREW (Lớn)": 5000, "MEGA BATCH (Đặc biệt)": 10000}
 TOPPING_OPTIONS = {
     "Trân châu đen": 5000,
     "Trân châu trắng": 7000,
