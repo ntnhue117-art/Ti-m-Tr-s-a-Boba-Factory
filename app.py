@@ -58,7 +58,7 @@ if "won_gift" not in st.session_state:
 if os.path.exists("TRASUA.jpg"):
     st.image("TRASUA.jpg", use_container_width=True)
 
-st.title("🧋 TIỆM TRÀ SỮA NGỌC HUỆ")
+st.title("🧋 BOBA FACTORY")
 st.caption("✨ Chuẩn vị trà - Thơm vị sữa - Đặt hàng nhanh chóng ✨")
 st.markdown("---")
 
