@@ -2,18 +2,49 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import random
-import os
 
 # ---------------------------------------------------------
-# 1. CẤU HÌNH TRANG & CƠ SỞ DỮ LIỆU SẢN PHẨM
+# 1. CẤU HÌNH TRANG
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="BOBA FACTORY🧋",
+    page_title="BOBA FACTORY",
     page_icon="🧋",
     layout="wide"
 )
 
-# Danh sách menu & giá (VND)
+# Custom CSS tạo giao diện bo tròn & hiệu ứng xịn
+st.markdown("""
+<style>
+    .main-banner {
+        background: linear-gradient(135deg, #FFD1DC 0%, #FFEBEF 100%);
+        padding: 35px;
+        border-radius: 25px;
+        text-align: center;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .main-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #5D4037;
+        margin-bottom: 5px;
+        letter-spacing: 2px;
+    }
+    .sub-title {
+        font-size: 16px;
+        color: #8D6E63;
+        font-style: italic;
+    }
+    .stButton>button {
+        border-radius: 12px;
+        font-weight: bold;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# 2. DỮ LIỆU SẢN PHẨM & DỮ LIỆU MẪU
+# ---------------------------------------------------------
 MENU_TEA = {
     "Trà Sữa Truyền Thống": 30000,
     "Trà Sữa Trân Châu Đường Đen": 35000,
@@ -25,12 +56,7 @@ MENU_TEA = {
     "Trà Dâu Tằm": 32000,
 }
 
-SIZE_OPTIONS = {
-    "S (Vừa)": 0,
-    "M (Lớn)": 5000,
-    "L (Đặc biệt)": 10000
-}
-
+SIZE_OPTIONS = {"S (Vừa)": 0, "M (Lớn)": 5000, "L (Đặc biệt)": 10000}
 TOPPING_OPTIONS = {
     "Trân châu đen": 5000,
     "Trân châu trắng": 7000,
@@ -38,11 +64,10 @@ TOPPING_OPTIONS = {
     "Pudding trứng": 8000,
     "Kem Cheese": 10000
 }
+SUGAR_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0%"]
+ICE_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0%"]
 
-SUGAR_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0% (Không đường)"]
-ICE_LEVELS = ["100% (Bình thường)", "70%", "50%", "30%", "0% (Không đá)"]
-
-# Khởi tạo session state
+# Session states
 if "cart" not in st.session_state:
     st.session_state.cart = []
 if "invoice_paid" not in st.session_state:
@@ -53,161 +78,142 @@ if "won_gift" not in st.session_state:
     st.session_state.won_gift = ""
 
 # ---------------------------------------------------------
-# 2. HIỂN THỊ BANNER VÀ TIÊU ĐỀ
+# 3. THANH SIDEBAR BÊN TRÁI (GIỐNG CÁC APP VIP)
 # ---------------------------------------------------------
-if os.path.exists("TRASUA.jpg"):
-    st.image("TRASUA.jpg", use_container_width=True)
-
-st.title("🧋 BOBA FACTORY")
-st.caption("✨ Chuẩn vị trà - Thơm vị sữa - Đặt hàng nhanh chóng ✨")
-st.markdown("---")
-
-# ---------------------------------------------------------
-# 3. GIAO DIỆN CHÍNH (3 CỘT)
-# ---------------------------------------------------------
-col_left, col_mid, col_right = st.columns([1.1, 1, 0.9])
-
-# ==================== CỘT 1: NHẬP THÔNG TIN MÓN ====================
-with col_left:
-    st.subheader("📝 1. Chọn món & Tùy chọn")
-    
-    selected_tea = st.selectbox("Loại trà sữa:", list(MENU_TEA.keys()))
-    quantity = st.number_input("Số lượng:", min_value=1, value=1, step=1)
-    
-    c_size, c_sugar, c_ice = st.columns(3)
-    with c_size:
-        selected_size = st.selectbox("Size:", list(SIZE_OPTIONS.keys()))
-    with c_sugar:
-        selected_sugar = st.selectbox("Mức đường:", SUGAR_LEVELS)
-    with c_ice:
-        selected_ice = st.selectbox("Mức đá:", ICE_LEVELS)
-        
-    selected_toppings = st.multiselect(
-        "Topping kèm theo:",
-        options=list(TOPPING_OPTIONS.keys())
-    )
-    
-    base_price = MENU_TEA[selected_tea]
-    size_price = SIZE_OPTIONS[selected_size]
-    topping_price = sum(TOPPING_OPTIONS[t] for t in selected_toppings)
-    unit_price = base_price + size_price + topping_price
-    item_total = unit_price * quantity
-    
-    st.info(f"💡 Đơn giá 1 ly: **{unit_price:,} VNĐ**")
-    
-    if st.button("➕ Thêm vào giỏ hàng", type="primary", use_container_width=True):
-        topping_str = ", ".join(selected_toppings) if selected_toppings else "Không"
-        item_data = {
-            "Tên món": selected_tea,
-            "Size": selected_size.split()[0],
-            "Đường": selected_sugar.split()[0],
-            "Đá": selected_ice.split()[0],
-            "Topping": topping_str,
-            "Đơn giá": unit_price,
-            "Số lượng": quantity,
-            "Thành tiền": item_total
-        }
-        st.session_state.cart.append(item_data)
-        st.session_state.invoice_paid = False
-        st.toast(f"Đã thêm **{quantity}x {selected_tea}** vào giỏ!", icon="✅")
-
-# ==================== CỘT 2: KHUYẾN MÃI & GIAO HÀNG ====================
-with col_mid:
-    st.subheader("🚚 2. Thông tin giao hàng & Ưu đãi")
-    
-    customer_name = st.text_input("Tên khách hàng:", placeholder="Nhập tên bạn...")
-    customer_phone = st.text_input("Số điện thoại (Tích điểm):", placeholder="0901234567...")
-    
-    order_type = st.radio("Hình thức nhận hàng:", ["Tại quán", "Mang đi", "Giao hàng tận nơi (Delivery)"], horizontal=True)
-    
-    shipping_fee = 0
-    delivery_address = ""
-    if order_type == "Giao hàng tận nơi (Delivery)":
-        delivery_address = st.text_input("Địa chỉ giao hàng:", placeholder="Nhập số nhà, tên đường...")
-        shipping_fee = 15000
-        st.caption("🛵 Phí ship cố định: 15.000 VNĐ (Miễn phí cho đơn từ 100k)")
-
+with st.sidebar:
+    st.markdown("## 🧋 BOBA ")
+    st.caption("✨ Chuẩn vị trà - Thơm vị sữa - Đặt hàng nhanh chóng ✨")
     st.markdown("---")
-    st.subheader("🎁 Vòng quay may mắn nhận quà")
-    if st.button("🎲 Quay thưởng ngay!"):
-        rewards = [
-            ("Giảm 10% tổng đơn!", 10),
-            ("Giảm 15% tổng đơn!", 15),
-            ("Giảm 20% siêu hời!", 20),
-            ("Chúc bạn may mắn lần sau!", 0)
-        ]
-        gift, disc_percent = random.choice(rewards)
-        st.session_state.game_discount = disc_percent
+    
+    st.markdown("### 🏠 Thông tin cửa hàng")
+    st.write("📍 **Địa chỉ:** 306, Võ Văn Hát, Long Trường, Thủ Đức, TP.HCM")
+    st.write("⏰ **Giờ mở cửa:** 09:00 - 22:00")
+    st.write("📞 **Hotline:** 0702.884.202")
+    
+    st.markdown("---")
+    st.markdown("### 💡 Chức năng hệ thống")
+    st.markdown("""
+    * 🧋 Menu Gọi Món Online
+    * 🎲 Vòng Quay Lucky Sip
+    * 🛒 Giỏ Hàng & VietQR
+    * 📊 Quản Trị Doanh Thu
+    """)
+
+# ---------------------------------------------------------
+# 4. BANNER CHÍNH
+# ---------------------------------------------------------
+st.markdown("""
+<div class="main-banner">
+    <div style="font-size: 14px; letter-spacing: 3px; font-weight: bold; color: #E07A5F;">WELCOME TO OUR LITTLE WORLD</div>
+    <div class="main-title">NGỌC HUỆ DRINK STUDIO</div>
+    <div class="sub-title">"Tea, coffee & little joy — Một góc nhỏ ngọt ngào để bạn tìm thấy thức uống hợp mood của mình."</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# 5. PHÂN TAB CHỨC NĂNG (MENU, LUCKY SIP, GIỎ HÀNG, QUẢN TRỊ)
+# ---------------------------------------------------------
+tab_menu, tab_lucky, tab_cart, tab_admin = st.tabs([
+    "🧋 Menu & Gọi Món", 
+    "🎁 Lucky Sip (Quay quà)", 
+    f"🛒 Giỏ Hàng ({len(st.session_state.cart)})", 
+    "📊 Báo Cáo Doanh Thu"
+])
+
+# ==================== TAB 1: MENU & GỌI MÓN ====================
+with tab_menu:
+    col_a, col_b = st.columns([1.2, 0.8])
+    
+    with col_a:
+        st.subheader("📝 Chọn món & Khử vị")
+        selected_tea = st.selectbox("Loại trà sữa:", list(MENU_TEA.keys()))
+        quantity = st.number_input("Số lượng:", min_value=1, value=1)
+        
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            selected_size = st.selectbox("Size:", list(SIZE_OPTIONS.keys()))
+        with c2:
+            selected_sugar = st.selectbox("Đường:", SUGAR_LEVELS)
+        with c3:
+            selected_ice = st.selectbox("Đá:", ICE_LEVELS)
+            
+        selected_toppings = st.multiselect("Topping:", list(TOPPING_OPTIONS.keys()))
+        
+        unit_price = MENU_TEA[selected_tea] + SIZE_OPTIONS[selected_size] + sum(TOPPING_OPTIONS[t] for t in selected_toppings)
+        item_total = unit_price * quantity
+        
+        st.info(f"💵 Đơn giá 1 ly: **{unit_price:,} VNĐ**")
+        
+        if st.button("➕ Thêm vào giỏ hàng", type="primary", use_container_width=True):
+            st.session_state.cart.append({
+                "Tên món": selected_tea,
+                "Size": selected_size.split()[0],
+                "Đường": selected_sugar,
+                "Đá": selected_ice,
+                "Topping": ", ".join(selected_toppings) if selected_toppings else "Không",
+                "Đơn giá": unit_price,
+                "Số lượng": quantity,
+                "Thành tiền": item_total
+            })
+            st.session_state.invoice_paid = False
+            st.toast("Đã thêm vào giỏ hàng thành công!", icon="✅")
+
+    with col_b:
+        st.subheader("🛵 Thông tin giao nhận")
+        customer_name = st.text_input("Tên khách hàng:", placeholder="Nhập tên bạn...")
+        customer_phone = st.text_input("Số điện thoại:", placeholder="090x xxx xxx...")
+        order_type = st.radio("Hình thức:", ["Tại quán", "Mang đi", "Giao hàng (Delivery)"], horizontal=True)
+        delivery_address = st.text_input("Địa chỉ giao hàng (nếu có):") if order_type == "Giao hàng (Delivery)" else ""
+
+# ==================== TAB 2: LUCKY SIP (MINIGAME) ====================
+with tab_lucky:
+    st.subheader("🎲 Vòng Quay May Mắn nhận Voucher")
+    st.write("Quay thưởng ngay để nhận mã giảm giá cho đơn hàng hôm nay!")
+    
+    if st.button("🌟 Xoay Ngay Vòng Quay"):
+        rewards = [("Giảm 10% tổng đơn", 10), ("Giảm 15% tổng đơn", 15), ("Giảm 20% tổng đơn", 20), ("May mắn lần sau", 0)]
+        gift, disc = random.choice(rewards)
+        st.session_state.game_discount = disc
         st.session_state.won_gift = gift
         
     if st.session_state.won_gift:
-        st.success(f"🎉 Kết quả: **{st.session_state.won_gift}**")
+        st.balloons()
+        st.success(f"🎉 Bạn nhận được: **{st.session_state.won_gift}**")
 
-# ==================== CỘT 3: GIỎ HÀNG & THANH TOÁN ====================
-with col_right:
-    st.subheader("🛒 3. Giỏ hàng của bạn")
-    
+# ==================== TAB 3: GIỎ HÀNG & THANH TOÁN ====================
+with tab_cart:
     if not st.session_state.cart:
-        st.warning("Giỏ hàng đang trống.")
+        st.warning("Giỏ hàng hiện đang trống. Hãy qua tab Menu chọn món nhé!")
     else:
         df_cart = pd.DataFrame(st.session_state.cart)
-        st.dataframe(
-            df_cart[["Tên món", "Size", "Số lượng", "Thành tiền"]],
-            use_container_width=True,
-            hide_index=True
-        )
+        st.dataframe(df_cart[["Tên món", "Size", "Topping", "Số lượng", "Thành tiền"]], use_container_width=True, hide_index=True)
         
-        if st.button("🗑️ Xóa giỏ hàng"):
-            st.session_state.cart = []
-            st.session_state.invoice_paid = False
-            st.rerun()
-            
         raw_total = df_cart["Thành tiền"].sum()
+        ship = 15000 if order_type == "Giao hàng (Delivery)" and raw_total < 100000 else 0
+        final_total = int(raw_total * (1 - st.session_state.game_discount / 100)) + ship
         
-        # Tính phí ship miễn phí nếu đơn >= 100k
-        if raw_total >= 100000 and order_type == "Giao hàng tận nơi (Delivery)":
-            shipping_fee = 0
-            st.caption("🎉 Bạn được MIỄN PHÍ VẮN CHUYỂN!")
-            
-        manual_discount = st.number_input("Mã giảm giá thêm (%):", min_value=0, max_value=100, value=0, step=5)
-        total_discount_percent = min(100, manual_discount + st.session_state.game_discount)
+        st.markdown(f"### Tổng tiền: **{raw_total:,} VNĐ**")
+        if st.session_state.game_discount > 0:
+            st.markdown(f"🎁 Giảm giá Minigame ({st.session_state.game_discount}%): **-{int(raw_total * st.session_state.game_discount/100):,} VNĐ**")
+        if ship > 0:
+            st.markdown(f"🛵 Phí giao hàng: **{ship:,} VNĐ**")
+        st.markdown(f"## THÀNH TIỀN: :red[{final_total:,} VNĐ]")
         
-        final_price = int(raw_total * (1 - total_discount_percent / 100)) + shipping_fee
+        payment_method = st.selectbox("Phương thức thanh toán:", ["Chuyển khoản QR ngân hàng", "Tiền mặt"])
         
-        st.markdown(f"**Tiền món:** {raw_total:,} VNĐ")
-        if shipping_fee > 0:
-            st.markdown(f"**Phí giao hàng:** {shipping_fee:,} VNĐ")
-        st.markdown(f"### TỔNG CỘNG: :red[{final_price:,} VNĐ]")
-        
-        payment_method = st.selectbox("Phương thức thanh toán:", ["Tiền mặt khi nhận hàng", "Chuyển khoản QR ngân hàng"])
-        
-        if st.button("💳 XÁC NHẬN ĐẶT HÀNG", type="primary", use_container_width=True):
+        if st.button("💳 XÁC NHẬN THANH TOÁN", type="primary", use_container_width=True):
             st.session_state.invoice_paid = True
-            st.balloons()
+            
+        if st.session_state.invoice_paid:
+            st.success("🎉 Đơn hàng đã được ghi nhận!")
+            if payment_method == "Chuyển khoản QR ngân hàng":
+                qr_url = f"https://img.vietqr.io/image/MB-0901234567-compact2.png?amount={final_total}&addInfo=TraSuaNgocHue%20{customer_phone}&accountName=NGOC%20HUE%20TEA"
+                st.image(qr_url, caption="Quét mã VietQR bằng App Ngân hàng", width=300)
 
-# ---------------------------------------------------------
-# 4. HÓA ĐƠN & MÃ QR THANH TOÁN
-# ---------------------------------------------------------
-if st.session_state.get("invoice_paid") and st.session_state.cart:
-    st.markdown("---")
-    st.success("🎉 ĐẶT HÀNG THÀNH CÔNG! Dưới đây là chi tiết đơn hàng:")
-    
-    col_inv1, col_inv2 = st.columns([1.2, 0.8])
-    
-    with col_inv1:
-        st.markdown("### 📄 HÓA ĐƠN BÁN HÀNG")
-        st.write(f"**Thời gian:** {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-        st.write(f"**Khách hàng:** {customer_name if customer_name else 'Khách vãng lai'} - **SĐT:** {customer_phone}")
-        st.write(f"**Hình thức:** {order_type} {f'({delivery_address})' if delivery_address else ''}")
-        
-        st.table(pd.DataFrame(st.session_state.cart)[["Tên món", "Size", "Topping", "Số lượng", "Thành tiền"]])
-        st.markdown(f"#### Tổng tiền thanh toán: :red[{final_price:,} VNĐ]")
-
-    with col_inv2:
-        if payment_method == "Chuyển khoản QR ngân hàng":
-            st.markdown("### 📲 Quét mã VietQR thanh toán")
-            # Tạo link VietQR động theo số tiền
-            qr_url = f"https://img.vietqr.io/image/MB-0901234567-compact2.png?amount={final_price}&addInfo=TraSuaNgocHue%20{customer_phone}&accountName=TIEM%20TRA%20SUA%20NGOC%20HUE"
-            st.image(qr_url, caption="Quét mã bằng app Ngân hàng / Momo", use_container_width=True)
-        else:
-            st.info("💵 Bạn đã chọn thanh toán **Tiền mặt**. Vui lòng chuẩn bị tiền khi nhận hàng!")
+# ==================== TAB 4: BÁO CÁO DOANH THU ====================
+with tab_admin:
+    st.subheader("📊 Báo cáo Doanh thu & Thống kê")
+    col_m1, col_m2, col_m3 = st.columns(3)
+    col_m1.metric("Tổng đơn hôm nay", "12 Đơn", "+2 đơn")
+    col_m2.metric("Doanh thu tạm tính", "1.450.000 VNĐ", "+15%")
+    col_m3.metric("Món bán chạy nhất", "Trà Sữa Trân Châu Đường Đen")
