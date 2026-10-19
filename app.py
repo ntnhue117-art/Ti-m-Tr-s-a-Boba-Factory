@@ -278,4 +278,52 @@ with tab_main:
                 st.success("🎉 Đơn hàng của bạn đã được gửi thành công!")
                 if payment_method == "Chuyển khoản VietQR":
                     st.markdown("#### 📲 Quét mã VietQR Chuyển Khoản")
-                    qr_url = f"
+                    qr_url = f"https://img.vietqr.io/image/MB-0702884202-compact2.png?amount={final_total}&addInfo=BOBA%20{customer_phone}&accountName=BOBA%20FACTORY"
+                    st.image(qr_url, caption="Mở App Ngân hàng quét mã chuyển khoản", width=280)
+
+    # --- BỐ CỤC 5: FOOTER ---
+    st.markdown("""
+    <div class="custom-footer">
+        <h3>🧋 BOBA FACTORY STUDIO</h3>
+        <p>📍 <b>Địa chỉ:</b> 306 Võ Văn Hát, P. Long Trường, TP. Thủ Đức, TP.HCM</p>
+        <p>📞 <b>Hotline Đặt Hàng:</b> 0702.884.202 | ⏰ <b>Mở cửa:</b> 09:00 - 22:00 Hàng ngày</p>
+        <p style="font-size: 13px; color: #8D6E63; margin-top: 10px;">© 2026 BOBA FACTORY. Designed with ❤️ by Ngoc Hue</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ==================== TAB 2: LUCKY SPIN ====================
+with tab_lucky:
+    st.subheader("🎲 Vòng Quay May Mắn - Nhận Voucher Ngay!")
+    st.write("Quay thưởng trước khi chốt đơn để săn voucher giảm giá nhé!")
+    
+    if st.button("🎰 THỬ VẬN MAY NGAY"):
+        rewards = [("Voucher Giảm 10%", 10), ("Voucher Giảm 15%", 15), ("Voucher Giảm 20%", 20), ("Chúc bạn may mắn lần sau", 0)]
+        gift, disc = random.choice(rewards)
+        st.session_state.game_discount = disc
+        st.session_state.won_gift = gift
+        
+    if st.session_state.won_gift:
+        st.balloons()
+        st.success(f"🎉 Kết quả quay: **{st.session_state.won_gift}** (Đã áp dụng tự động vào giỏ hàng)")
+
+# ==================== TAB 3: QUẢN TRỊ ====================
+with tab_admin:
+    st.subheader("🔒 Khu Vực Quản Trị Hệ Thống & Báo Cáo")
+    pin_code = st.text_input("Nhập Mã PIN Quản Trị (Mặc định: 1234):", type="password")
+    
+    if pin_code == "1234":
+        st.success("✅ Xác thực quyền Quản trị thành công!")
+        st.markdown("---")
+        
+        col_m1, col_m2, col_m3 = st.columns(3)
+        col_m1.metric("Tổng đơn hôm nay", "18 Đơn", "+4 đơn")
+        col_m2.metric("Doanh thu trong ngày", "1.890.000 VNĐ", "+22%")
+        col_m3.metric("Món bán chạy nhất", "Trà Sữa Trân Châu Đường Đen")
+        
+        st.markdown("### 📋 Danh sách đơn hàng cần pha chế (KDS)")
+        if st.session_state.cart:
+            st.dataframe(pd.DataFrame(st.session_state.cart), use_container_width=True)
+        else:
+            st.info("Hiện tại chưa có đơn hàng mới nào cần pha chế.")
+    elif pin_code != "":
+        st.error("❌ Mã PIN không chính xác! Vui lòng thử lại.")
